@@ -1,0 +1,103 @@
+﻿/* Content/site.css */
+.navbar-brand img {
+    width: 100px; /* Ajusta este valor según el tamaño deseado */
+    height: auto;
+   margin-right:50px;
+   margin-left:20px;
+   
+}
+
+.nav-item{
+    padding-right:35px;
+    padding-left:35px;
+}
+/* Estilos adicionales */
+
+.nav-item .nav-link {
+    color: #000;
+    transition: background-color 0.3s, color 0.3s; /* Transición suave */
+    padding: 10px 15px; /* Añade padding para el efecto del cuadro */
+    border-radius:5px;
+}
+
+    .nav-item .nav-link:hover {
+        background-color: #004400;
+        color: #fff;
+        
+    }
+
+.nav-item.active .nav-link {
+    background-color: #004400;
+    color: #fff;
+}
+
+.navbar {
+    width: 100%;
+    margin: 0;
+    padding: 20px;
+    background-color: white; /* Asegura que el fondo sea blanco */
+}
+
+body {
+    padding-top: 70px; /* Altura de la navbar para que no cubra el contenido */
+}
+.content-wrapper {
+    margin-top: 70px; /* Altura de la barra de navegación */
+}
+
+.modal-header .close {
+    margin: -0.5rem -0.5rem -0.5rem auto;
+    background-color:red;
+    border-radius:5px;
+    color:white;
+}
+
+.container-home {
+    max-width: 1200px;
+    margin: 0 auto;
+    margin-top:100px;
+    padding: 20px;
+    text-align: center;
+    display: grid;
+    
+    grid-template-columns: repeat(2, 1fr);
+    justify-content:center;
+    
+}
+
+.img-home img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    margin-right:20px;
+}
+
+.title-home {
+    margin: 20px 20px;
+}
+
+    .title-home h1 {
+        font-size: 40px;
+        color: #333;
+        margin: 0;
+        padding: 0;
+        text-align:end;
+    }
+
+    .title-home p {
+        color: #666;
+        font-size: 16px;
+        margin: 30px 0;
+        text-align:right;
+    }
+
+.actions-container{
+    display:flex;
+    flex-direction:row;
+}
+button.btn-outline-success-custom {
+    /*padding: 10px 20px; */
+    font-size: 20px; 
+    border-radius: 5px; 
+}
