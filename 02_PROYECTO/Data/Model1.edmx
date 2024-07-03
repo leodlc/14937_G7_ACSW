@@ -1,0 +1,370 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="booksDataBaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AUTOR">
+          <Key>
+            <PropertyRef Name="IDAUTOR" />
+          </Key>
+          <Property Name="IDAUTOR" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBREAUTOR" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="APELLIDOAUTOR" Type="varchar" MaxLength="100" />
+          <Property Name="NACIONALIDADAUTOR" Type="varchar" MaxLength="30" />
+          <Property Name="BIOGRAFIAAUTOR" Type="varchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="CLIENTE">
+          <Key>
+            <PropertyRef Name="IDCLIENTE" />
+          </Key>
+          <Property Name="IDCLIENTE" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CEDULACLIENTE" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="NOMBRECLIENTE" Type="char" MaxLength="50" Nullable="false" />
+          <Property Name="APELLIDOCLIENTE" Type="char" MaxLength="50" />
+          <Property Name="TELEFONOCLIENTE" Type="varchar" MaxLength="10" />
+          <Property Name="DIRECCLIENTE" Type="varchar" MaxLength="100" />
+          <Property Name="FECHANACCLIENTE" Type="datetime" />
+          <Property Name="ESTADOCLIENTE" Type="bit" />
+        </EntityType>
+        <EntityType Name="GENEROLITERARIO">
+          <Key>
+            <PropertyRef Name="IDGL" />
+          </Key>
+          <Property Name="IDGL" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NOMBREGL" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DESCRIPGL" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="LIBRO">
+          <Key>
+            <PropertyRef Name="IDLIBRO" />
+          </Key>
+          <Property Name="IDLIBRO" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IDAUTOR" Type="int" Nullable="false" />
+          <Property Name="IDGL" Type="int" Nullable="false" />
+          <Property Name="NOMBRELIBRO" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ANIOPUBLIBRO" Type="datetime" />
+          <Property Name="IMGLIBRO" Type="varchar" MaxLength="200" />
+          <Property Name="ISBNLIBRO" Type="varchar" MaxLength="100" />
+          <Property Name="ESTADOLIBRO" Type="bit" />
+          <Property Name="EDITORIALLIBRO" Type="varchar" MaxLength="100" />
+          <Property Name="STOCKLIBRO" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PRESTAMO">
+          <Key>
+            <PropertyRef Name="IDCLIENTE" />
+            <PropertyRef Name="IDLIBRO" />
+          </Key>
+          <Property Name="IDCLIENTE" Type="int" Nullable="false" />
+          <Property Name="IDLIBRO" Type="int" Nullable="false" />
+          <Property Name="FECHAINIPREST" Type="datetime" />
+          <Property Name="FECHAFINPREST" Type="datetime" />
+          <Property Name="DESCRPREST" Type="varchar" MaxLength="200" />
+          <Property Name="ESTADOPREST" Type="bit" />
+        </EntityType>
+        <Association Name="FK_LIBRO_CORRESPON_GENEROLI">
+          <End Role="GENEROLITERARIO" Type="Self.GENEROLITERARIO" Multiplicity="1" />
+          <End Role="LIBRO" Type="Self.LIBRO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GENEROLITERARIO">
+              <PropertyRef Name="IDGL" />
+            </Principal>
+            <Dependent Role="LIBRO">
+              <PropertyRef Name="IDGL" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LIBRO_PERTENECE_AUTOR">
+          <End Role="AUTOR" Type="Self.AUTOR" Multiplicity="1" />
+          <End Role="LIBRO" Type="Self.LIBRO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AUTOR">
+              <PropertyRef Name="IDAUTOR" />
+            </Principal>
+            <Dependent Role="LIBRO">
+              <PropertyRef Name="IDAUTOR" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PRESTAMO_PEDIDO_LIBRO">
+          <End Role="LIBRO" Type="Self.LIBRO" Multiplicity="1" />
+          <End Role="PRESTAMO" Type="Self.PRESTAMO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LIBRO">
+              <PropertyRef Name="IDLIBRO" />
+            </Principal>
+            <Dependent Role="PRESTAMO">
+              <PropertyRef Name="IDLIBRO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PRESTAMO_SOLICITA_CLIENTE">
+          <End Role="CLIENTE" Type="Self.CLIENTE" Multiplicity="1" />
+          <End Role="PRESTAMO" Type="Self.PRESTAMO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CLIENTE">
+              <PropertyRef Name="IDCLIENTE" />
+            </Principal>
+            <Dependent Role="PRESTAMO">
+              <PropertyRef Name="IDCLIENTE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="booksDataBaseModelStoreContainer">
+          <EntitySet Name="AUTOR" EntityType="Self.AUTOR" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CLIENTE" EntityType="Self.CLIENTE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="GENEROLITERARIO" EntityType="Self.GENEROLITERARIO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="LIBRO" EntityType="Self.LIBRO" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PRESTAMO" EntityType="Self.PRESTAMO" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_LIBRO_CORRESPON_GENEROLI" Association="Self.FK_LIBRO_CORRESPON_GENEROLI">
+            <End Role="GENEROLITERARIO" EntitySet="GENEROLITERARIO" />
+            <End Role="LIBRO" EntitySet="LIBRO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LIBRO_PERTENECE_AUTOR" Association="Self.FK_LIBRO_PERTENECE_AUTOR">
+            <End Role="AUTOR" EntitySet="AUTOR" />
+            <End Role="LIBRO" EntitySet="LIBRO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PRESTAMO_PEDIDO_LIBRO" Association="Self.FK_PRESTAMO_PEDIDO_LIBRO">
+            <End Role="LIBRO" EntitySet="LIBRO" />
+            <End Role="PRESTAMO" EntitySet="PRESTAMO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PRESTAMO_SOLICITA_CLIENTE" Association="Self.FK_PRESTAMO_SOLICITA_CLIENTE">
+            <End Role="CLIENTE" EntitySet="CLIENTE" />
+            <End Role="PRESTAMO" EntitySet="PRESTAMO" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="booksDataBaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AUTOR">
+          <Key>
+            <PropertyRef Name="IDAUTOR" />
+          </Key>
+          <Property Name="IDAUTOR" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBREAUTOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="APELLIDOAUTOR" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NACIONALIDADAUTOR" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="BIOGRAFIAAUTOR" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="LIBRO" Relationship="Self.FK_LIBRO_PERTENECE_AUTOR" FromRole="AUTOR" ToRole="LIBRO" />
+        </EntityType>
+        <EntityType Name="CLIENTE">
+          <Key>
+            <PropertyRef Name="IDCLIENTE" />
+          </Key>
+          <Property Name="IDCLIENTE" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CEDULACLIENTE" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NOMBRECLIENTE" Type="String" MaxLength="50" FixedLength="true" Unicode="false" Nullable="false" />
+          <Property Name="APELLIDOCLIENTE" Type="String" MaxLength="50" FixedLength="true" Unicode="false" />
+          <Property Name="TELEFONOCLIENTE" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="DIRECCLIENTE" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FECHANACCLIENTE" Type="DateTime" Precision="3" />
+          <Property Name="ESTADOCLIENTE" Type="Boolean" />
+          <NavigationProperty Name="PRESTAMO" Relationship="Self.FK_PRESTAMO_SOLICITA_CLIENTE" FromRole="CLIENTE" ToRole="PRESTAMO" />
+        </EntityType>
+        <EntityType Name="GENEROLITERARIO">
+          <Key>
+            <PropertyRef Name="IDGL" />
+          </Key>
+          <Property Name="IDGL" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NOMBREGL" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="DESCRIPGL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="LIBRO" Relationship="Self.FK_LIBRO_CORRESPON_GENEROLI" FromRole="GENEROLITERARIO" ToRole="LIBRO" />
+        </EntityType>
+        <EntityType Name="LIBRO">
+          <Key>
+            <PropertyRef Name="IDLIBRO" />
+          </Key>
+          <Property Name="IDLIBRO" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IDAUTOR" Type="Int32" Nullable="false" />
+          <Property Name="IDGL" Type="Int32" Nullable="false" />
+          <Property Name="NOMBRELIBRO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ANIOPUBLIBRO" Type="DateTime" Precision="3" />
+          <Property Name="IMGLIBRO" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ISBNLIBRO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ESTADOLIBRO" Type="Boolean" />
+          <Property Name="EDITORIALLIBRO" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="STOCKLIBRO" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AUTOR" Relationship="Self.FK_LIBRO_PERTENECE_AUTOR" FromRole="LIBRO" ToRole="AUTOR" />
+          <NavigationProperty Name="GENEROLITERARIO" Relationship="Self.FK_LIBRO_CORRESPON_GENEROLI" FromRole="LIBRO" ToRole="GENEROLITERARIO" />
+          <NavigationProperty Name="PRESTAMO" Relationship="Self.FK_PRESTAMO_PEDIDO_LIBRO" FromRole="LIBRO" ToRole="PRESTAMO" />
+        </EntityType>
+        <EntityType Name="PRESTAMO">
+          <Key>
+            <PropertyRef Name="IDCLIENTE" />
+            <PropertyRef Name="IDLIBRO" />
+          </Key>
+          <Property Name="IDCLIENTE" Type="Int32" Nullable="false" />
+          <Property Name="IDLIBRO" Type="Int32" Nullable="false" />
+          <Property Name="FECHAINIPREST" Type="DateTime" Precision="3" />
+          <Property Name="FECHAFINPREST" Type="DateTime" Precision="3" />
+          <Property Name="DESCRPREST" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ESTADOPREST" Type="Boolean" />
+          <NavigationProperty Name="CLIENTE" Relationship="Self.FK_PRESTAMO_SOLICITA_CLIENTE" FromRole="PRESTAMO" ToRole="CLIENTE" />
+          <NavigationProperty Name="LIBRO" Relationship="Self.FK_PRESTAMO_PEDIDO_LIBRO" FromRole="PRESTAMO" ToRole="LIBRO" />
+        </EntityType>
+        <Association Name="FK_LIBRO_PERTENECE_AUTOR">
+          <End Role="AUTOR" Type="Self.AUTOR" Multiplicity="1" />
+          <End Role="LIBRO" Type="Self.LIBRO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AUTOR">
+              <PropertyRef Name="IDAUTOR" />
+            </Principal>
+            <Dependent Role="LIBRO">
+              <PropertyRef Name="IDAUTOR" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PRESTAMO_SOLICITA_CLIENTE">
+          <End Role="CLIENTE" Type="Self.CLIENTE" Multiplicity="1" />
+          <End Role="PRESTAMO" Type="Self.PRESTAMO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CLIENTE">
+              <PropertyRef Name="IDCLIENTE" />
+            </Principal>
+            <Dependent Role="PRESTAMO">
+              <PropertyRef Name="IDCLIENTE" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_LIBRO_CORRESPON_GENEROLI">
+          <End Role="GENEROLITERARIO" Type="Self.GENEROLITERARIO" Multiplicity="1" />
+          <End Role="LIBRO" Type="Self.LIBRO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="GENEROLITERARIO">
+              <PropertyRef Name="IDGL" />
+            </Principal>
+            <Dependent Role="LIBRO">
+              <PropertyRef Name="IDGL" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PRESTAMO_PEDIDO_LIBRO">
+          <End Role="LIBRO" Type="Self.LIBRO" Multiplicity="1" />
+          <End Role="PRESTAMO" Type="Self.PRESTAMO" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="LIBRO">
+              <PropertyRef Name="IDLIBRO" />
+            </Principal>
+            <Dependent Role="PRESTAMO">
+              <PropertyRef Name="IDLIBRO" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="booksDataBaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AUTOR" EntityType="Self.AUTOR" />
+          <EntitySet Name="CLIENTE" EntityType="Self.CLIENTE" />
+          <EntitySet Name="GENEROLITERARIO" EntityType="Self.GENEROLITERARIO" />
+          <EntitySet Name="LIBRO" EntityType="Self.LIBRO" />
+          <EntitySet Name="PRESTAMO" EntityType="Self.PRESTAMO" />
+          <AssociationSet Name="FK_LIBRO_PERTENECE_AUTOR" Association="Self.FK_LIBRO_PERTENECE_AUTOR">
+            <End Role="AUTOR" EntitySet="AUTOR" />
+            <End Role="LIBRO" EntitySet="LIBRO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PRESTAMO_SOLICITA_CLIENTE" Association="Self.FK_PRESTAMO_SOLICITA_CLIENTE">
+            <End Role="CLIENTE" EntitySet="CLIENTE" />
+            <End Role="PRESTAMO" EntitySet="PRESTAMO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_LIBRO_CORRESPON_GENEROLI" Association="Self.FK_LIBRO_CORRESPON_GENEROLI">
+            <End Role="GENEROLITERARIO" EntitySet="GENEROLITERARIO" />
+            <End Role="LIBRO" EntitySet="LIBRO" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PRESTAMO_PEDIDO_LIBRO" Association="Self.FK_PRESTAMO_PEDIDO_LIBRO">
+            <End Role="LIBRO" EntitySet="LIBRO" />
+            <End Role="PRESTAMO" EntitySet="PRESTAMO" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="booksDataBaseModelStoreContainer" CdmEntityContainer="booksDataBaseEntities">
+          <EntitySetMapping Name="AUTOR">
+            <EntityTypeMapping TypeName="booksDataBaseModel.AUTOR">
+              <MappingFragment StoreEntitySet="AUTOR">
+                <ScalarProperty Name="IDAUTOR" ColumnName="IDAUTOR" />
+                <ScalarProperty Name="NOMBREAUTOR" ColumnName="NOMBREAUTOR" />
+                <ScalarProperty Name="APELLIDOAUTOR" ColumnName="APELLIDOAUTOR" />
+                <ScalarProperty Name="NACIONALIDADAUTOR" ColumnName="NACIONALIDADAUTOR" />
+                <ScalarProperty Name="BIOGRAFIAAUTOR" ColumnName="BIOGRAFIAAUTOR" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CLIENTE">
+            <EntityTypeMapping TypeName="booksDataBaseModel.CLIENTE">
+              <MappingFragment StoreEntitySet="CLIENTE">
+                <ScalarProperty Name="IDCLIENTE" ColumnName="IDCLIENTE" />
+                <ScalarProperty Name="CEDULACLIENTE" ColumnName="CEDULACLIENTE" />
+                <ScalarProperty Name="NOMBRECLIENTE" ColumnName="NOMBRECLIENTE" />
+                <ScalarProperty Name="APELLIDOCLIENTE" ColumnName="APELLIDOCLIENTE" />
+                <ScalarProperty Name="TELEFONOCLIENTE" ColumnName="TELEFONOCLIENTE" />
+                <ScalarProperty Name="DIRECCLIENTE" ColumnName="DIRECCLIENTE" />
+                <ScalarProperty Name="FECHANACCLIENTE" ColumnName="FECHANACCLIENTE" />
+                <ScalarProperty Name="ESTADOCLIENTE" ColumnName="ESTADOCLIENTE" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GENEROLITERARIO">
+            <EntityTypeMapping TypeName="booksDataBaseModel.GENEROLITERARIO">
+              <MappingFragment StoreEntitySet="GENEROLITERARIO">
+                <ScalarProperty Name="IDGL" ColumnName="IDGL" />
+                <ScalarProperty Name="NOMBREGL" ColumnName="NOMBREGL" />
+                <ScalarProperty Name="DESCRIPGL" ColumnName="DESCRIPGL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="LIBRO">
+            <EntityTypeMapping TypeName="booksDataBaseModel.LIBRO">
+              <MappingFragment StoreEntitySet="LIBRO">
+                <ScalarProperty Name="IDLIBRO" ColumnName="IDLIBRO" />
+                <ScalarProperty Name="IDAUTOR" ColumnName="IDAUTOR" />
+                <ScalarProperty Name="IDGL" ColumnName="IDGL" />
+                <ScalarProperty Name="NOMBRELIBRO" ColumnName="NOMBRELIBRO" />
+                <ScalarProperty Name="ANIOPUBLIBRO" ColumnName="ANIOPUBLIBRO" />
+                <ScalarProperty Name="IMGLIBRO" ColumnName="IMGLIBRO" />
+                <ScalarProperty Name="ISBNLIBRO" ColumnName="ISBNLIBRO" />
+                <ScalarProperty Name="ESTADOLIBRO" ColumnName="ESTADOLIBRO" />
+                <ScalarProperty Name="EDITORIALLIBRO" ColumnName="EDITORIALLIBRO" />
+                <ScalarProperty Name="STOCKLIBRO" ColumnName="STOCKLIBRO" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PRESTAMO">
+            <EntityTypeMapping TypeName="booksDataBaseModel.PRESTAMO">
+              <MappingFragment StoreEntitySet="PRESTAMO">
+                <ScalarProperty Name="IDCLIENTE" ColumnName="IDCLIENTE" />
+                <ScalarProperty Name="IDLIBRO" ColumnName="IDLIBRO" />
+                <ScalarProperty Name="FECHAINIPREST" ColumnName="FECHAINIPREST" />
+                <ScalarProperty Name="FECHAFINPREST" ColumnName="FECHAFINPREST" />
+                <ScalarProperty Name="DESCRPREST" ColumnName="DESCRPREST" />
+                <ScalarProperty Name="ESTADOPREST" ColumnName="ESTADOPREST" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
