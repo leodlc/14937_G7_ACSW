@@ -1,0 +1,295 @@
+﻿@model IEnumerable<Data.CLIENTE>
+
+@Html.Partial("_NavBar")
+
+@{
+    ViewBag.Title = "Lista de Clientes";
+}
+
+<div class="content-wrapper">
+
+    <div class="text-center mb-3">
+        <h2>Clientes Registrados</h2>
+        <button type="button" class="btn" data-toggle="modal" data-target="#createModal" style="background-color: #004400;color:white">Agregar Cliente</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Cédula</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Fecha Nacimiento</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var cliente in Model)
+                {
+                    <tr>
+                        <td>@cliente.IDCLIENTE</td>
+                        <td>@cliente.CEDULACLIENTE</td>
+                        <td>@cliente.NOMBRECLIENTE</td>
+                        <td>@cliente.APELLIDOCLIENTE</td>
+                        <td>@cliente.TELEFONOCLIENTE</td>
+                        <td>@cliente.DIRECCLIENTE</td>
+                        <td>@(cliente.FECHANACCLIENTE.HasValue ? cliente.FECHANACCLIENTE.Value.ToShortDateString() : "")</td>
+                        <td>@(cliente.ESTADOCLIENTE == true ? "Activo" : "Inactivo")</td>
+                        <td>
+                            <div>
+                                <button type="button" class="btn btn-outline-success btn-outline-success-custom" data-toggle="modal" data-target="#editModal" data-id="@cliente.IDCLIENTE"><i class="fas fa-edit"></i></button>
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para Crear -->
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="createModalLabel">Crear Cliente</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("_CrearClienteForm", new Data.CLIENTE())
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="editModalLabel">Editar Cliente</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Aquí se cargará el formulario de edición -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agrega jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Agrega los scripts de Bootstrap -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+
+        var modal = $(this);
+        $.ajax({
+            url: '@Url.Action("Edit", "Client")',
+            type: 'GET',
+            data: { id: id },
+            success: function (data) {
+                modal.find('.modal-body').html(data);
+                addValidationScripts(modal);
+            }
+        });
+    });
+
+    $('#createModal').on('show.bs.modal', function (event) {
+        addValidationScripts($(this));
+    });
+
+    function addValidationScripts(modal) {
+        // Validación del campo de Cédula al cambiar su valor
+        modal.find('#CEDULACLIENTE').change(function () {
+            var cedula = $(this).val().trim();
+            if (!verificaCedula(cedula)) {
+                alert('La cédula ingresada no es válida.');
+                $(this).val(''); // Borra el valor ingresado
+            }
+        });
+
+        // Solo permite números en el campo de cédula
+        modal.find('#CEDULACLIENTE').keypress(function (e) {
+            var charCode = e.which;
+            // Permite solamente números (0-9)
+            if (charCode < 48 || charCode > 57) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+
+        // Validación de caracteres en los campos de Nombre y Apellido
+        modal.find('#NOMBRECLIENTE, #APELLIDOCLIENTE').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas), espacio y la letra "ñ"
+            if (!((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode == 32 || charCode == 241 || charCode == 209)) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+
+        // Solo permite números en el campo de teléfono
+        modal.find('#TELEFONOCLIENTE').keypress(function (e) {
+            var charCode = e.which;
+            // Permite solamente números (0-9)
+            if (charCode < 48 || charCode > 57) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+
+        // Validación del campo Dirección
+        modal.find('#DIRECCLIENTE').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas), números, espacio, guiones, comas y slashes
+            if (!((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 48 && charCode <= 57) || charCode == 32 || charCode == 45 || charCode == 44 || charCode == 47)) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+
+        // Validación de la fecha al cambiar su valor
+        modal.find('#FECHANACCLIENTE').change(function () {
+            var fechaNacimiento = $(this).val();
+            var fechaIngresada = new Date(fechaNacimiento);
+            var hoy = new Date();
+
+            // Calcula la edad mínima requerida (18 años)
+            var edadMinima = new Date();
+            edadMinima.setFullYear(edadMinima.getFullYear() - 18);
+
+            // Verifica si la fecha de nacimiento es mayor de 18 años y no en el futuro
+            if (fechaIngresada > hoy || fechaIngresada >= edadMinima) {
+                alert('La fecha de nacimiento debe ser válida y el cliente debe ser mayor de 18 años.');
+                $(this).val(''); // Borra el valor ingresado
+            }
+        });
+
+        // Validación del formulario al momento de enviar
+        modal.find('form').submit(function (e) {
+            var nombre = modal.find('#NOMBRECLIENTE').val().trim();
+            var apellido = modal.find('#APELLIDOCLIENTE').val().trim();
+            var telefono = modal.find('#TELEFONOCLIENTE').val().trim();
+            var direccion = modal.find('#DIRECCLIENTE').val().trim();
+            var cedula = modal.find('#CEDULACLIENTE').val().trim();
+
+            var nombreError = modal.find('#nombreError');
+            var apellidoError = modal.find('#apellidoError');
+            var telefonoError = modal.find('#telefonoError');
+            var direccionError = modal.find('#direccionError');
+
+            // Validación del campo Nombre
+            var nombrePattern = /^[a-zA-Z\s]+$/;
+            if (!nombrePattern.test(nombre)) {
+                nombreError.text('El nombre solo puede contener letras y espacios.');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                nombreError.text('');
+            }
+
+            // Validación del campo Apellido
+            var apellidoPattern = /^[a-zA-Z\sñÑ]+$/;
+            if (!apellidoPattern.test(apellido)) {
+                apellidoError.text('El apellido solo puede contener letras, espacios y la letra "ñ".');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                apellidoError.text('');
+            }
+
+            // Validación del campo Teléfono
+            var telefonoPattern = /^[0-9]+$/;
+            if (!telefonoPattern.test(telefono)) {
+                telefonoError.text('El teléfono solo puede contener números.');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                telefonoError.text('');
+            }
+
+            // Validación del campo Dirección
+            var direccionPattern = /^[a-zA-Z0-9\s\-\/,]+$/;
+            if (!direccionPattern.test(direccion)) {
+                direccionError.text('La dirección solo puede contener letras, números, espacios, guiones, comas y slashes.');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                direccionError.text('');
+            }
+
+            var fechaNacimiento = modal.find('#FECHANACCLIENTE').val();
+            var fechaIngresada = new Date(fechaNacimiento);
+            var hoy = new Date();
+
+            // Calcula la edad mínima requerida (18 años)
+            var edadMinima = new Date();
+            edadMinima.setFullYear(edadMinima.getFullYear() - 18);
+
+            // Verifica si la fecha de nacimiento es mayor de 18 años y no en el futuro
+            if (fechaIngresada > hoy || fechaIngresada >= edadMinima) {
+                alert('La fecha de nacimiento debe ser válida y el cliente debe ser mayor de 18 años.');
+                e.preventDefault(); // Evita el envío del formulario
+            }
+        });
+    }
+
+    // Función para verificar la cédula utilizando el algoritmo proporcionado
+    function verificaCedula(cedula) {
+        if (cedula.length < 10) {
+            return false;
+        }
+
+        if (!/^[0-9]+$/.test(cedula)) {
+            return false;
+        }
+
+        var provincia = parseInt(cedula.substr(0, 2));
+        if (provincia < 1 || provincia > 24) {
+            return false;
+        }
+
+        var digito3 = parseInt(cedula.charAt(2));
+        if (digito3 < 0 || digito3 > 5) {
+            return false;
+        }
+
+        return validaCedula(cedula);
+    }
+
+    // Función para validar la cédula según el algoritmo proporcionado
+    function validaCedula(cedula) {
+        var total = 0;
+        var longitud = cedula.length;
+        var digito = parseInt(cedula.charAt(longitud - 1));
+
+        for (var i = 0; i < longitud - 1; i++) {
+            var valor = parseInt(cedula.charAt(i));
+
+            if (i % 2 === 0) {
+                valor = valor * 2;
+                if (valor > 9) {
+                    valor = valor - 9;
+                }
+            }
+
+            total = total + valor;
+        }
+
+        var decenaSuperior = Math.ceil(total / 10) * 10;
+        var verificador = decenaSuperior - total;
+
+        if (verificador === 10) {
+            verificador = 0;
+        }
+
+        return verificador === digito;
+    }
+</script>

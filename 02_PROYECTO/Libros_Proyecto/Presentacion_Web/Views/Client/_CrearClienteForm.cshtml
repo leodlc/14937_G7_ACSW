@@ -1,0 +1,71 @@
+﻿@model Data.CLIENTE
+
+@using (Html.BeginForm(Model.IDCLIENTE == 0 ? "Create" : "Edit", "Client", FormMethod.Post, new { id = "clienteForm" }))
+{
+    @Html.AntiForgeryToken()
+<div class="form-horizontal">
+    <h4>Cliente</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <input type="hidden" id="IDCLIENTE" name="IDCLIENTE" value="@Model.IDCLIENTE" />
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="CEDULACLIENTE">Cédula</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="CEDULACLIENTE" name="CEDULACLIENTE" value="@Model.CEDULACLIENTE" required maxlength="10" />
+            <span class="text-danger" id="descripcionError"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="NOMBRECLIENTE">Nombre</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="NOMBRECLIENTE" name="NOMBRECLIENTE" value="@Model.NOMBRECLIENTE" required maxlength="15" />
+            <span class="text-danger" id="nombreError"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="APELLIDOCLIENTE">Apellido</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="APELLIDOCLIENTE" name="APELLIDOCLIENTE" value="@Model.APELLIDOCLIENTE" required maxlength="15" />
+            <span class="text-danger" id="apellidoError"></span>
+        </div>
+    </div>
+    <input type="hidden" id="ESTADOCLIENTE" name="ESTADOCLIENTE" value="true" />
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="TELEFONOCLIENTE">Teléfono</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="TELEFONOCLIENTE" name="TELEFONOCLIENTE" value="@Model.TELEFONOCLIENTE" maxlength="10" />
+            <span class="text-danger" id="telefonoError"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="DIRECCLIENTE">Dirección</label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" id="DIRECCLIENTE" name="DIRECCLIENTE" value="@Model.DIRECCLIENTE" required maxlength="100" />
+            <span class="text-danger" id="direccionError"></span>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2" for="FECHANACCLIENTE">Fecha de Nacimiento</label>
+        <div class="col-md-10">
+            <input type="date" class="form-control" id="FECHANACCLIENTE" name="FECHANACCLIENTE" value="@Model.FECHANACCLIENTE?.ToString(" yyyy-MM-dd")" />
+        </div>
+    </div>
+
+
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <div class="text-center">
+                <input type="submit" value="Guardar" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+</div>
+}

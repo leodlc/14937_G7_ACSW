@@ -1,0 +1,115 @@
+﻿@model Data.LIBRO
+
+@{
+    ViewBag.Title = "Detalles del Libro";
+}
+
+<div class="content-wrapper">
+    <h2>@Model.NOMBRELIBRO</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="@Model.IMGLIBRO" alt="@Model.NOMBRELIBRO" class="img-fluid" />
+        </div>
+        <div class="col-md-8">
+            <p><strong>Autor:</strong> <span id="autorNombre">Cargando...</span></p>
+            <p><strong>Año de Publicación:</strong> @(Model.ANIOPUBLIBRO?.ToString("yyyy-MM-dd") ?? "")</p>
+            <p><strong>ISBN:</strong> @Model.ISBNLIBRO</p>
+            <p><strong>Estado:</strong> @Model.ESTADOLIBRO</p>
+            <p><strong>Editorial:</strong> @Model.EDITORIALLIBRO</p>
+            <p><strong>Stock:</strong> @Model.STOCKLIBRO</p>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#editModal" data-id="@Model.IDLIBRO">Editar</button>
+        </div>
+    </div>
+
+    <!-- Modal para Editar -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="editModalLabel">Editar Libro</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Aquí se cargará el formulario de edición -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agrega jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Agrega los scripts de Bootstrap -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var autorId = @Model.IDAUTOR;
+        $.ajax({
+            url: 'http://localhost:54845/api/author/GetById/' + autorId,  // Asegúrate de que esta URL es correcta
+            type: 'GET',
+            success: function (data) {
+                console.log(data); // Verifica la estructura de la respuesta en la consola
+                $('#autorNombre').text(data.NOMBREAUTOR);
+            },
+            error: function () {
+                $('#autorNombre').text('Autor no encontrado');
+            }
+        });
+    });
+
+    $('#editModal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+
+        var modal = $(this);
+        $.ajax({
+            url: '@Url.Action("Edit", "Book")',
+            type: 'GET',
+            data: { id: id },
+            success: function (data) {
+                modal.find('.modal-body').html(data);
+                //addValidationScripts()
+            }
+        });
+    });
+
+    function addValidationScripts() {
+        // Uso de un selector más específico para evitar conflictos
+        $('#editModal #NOMBRELIBRO').keypress(function (e) {
+            var charCode = e.which;
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas), números, espacio, guiones, comas y slashes
+            if (!((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || (charCode >= 48 && charCode <= 57) || charCode == 32 || charCode == 45 || charCode == 44 || charCode == 47)) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+
+        $('#editModal #EDITORIALLIBRO').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras, números, espacios, comillas y comas
+            if ((charCode >= 65 && charCode <= 90) || // Letras mayúsculas
+                (charCode >= 97 && charCode <= 122) || // Letras minúsculas
+                (charCode >= 48 && charCode <= 57) || // Números
+                charCode == 32 || // Espacio
+                charCode == 34 || // Comillas dobles (")
+                charCode == 44) { // Coma (,)
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        $('#editModal #STOCKLIBRO').keypress(function (e) {
+            var charCode = e.which;
+            // Permite solamente números (0-9)
+            if (charCode < 48 || charCode > 57) {
+                e.preventDefault(); // evita la entrada del carácter
+            }
+        });
+    }
+</script>
+
