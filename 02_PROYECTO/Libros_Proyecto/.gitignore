@@ -1,0 +1,33 @@
+# Ignorar carpetas generadas por Visual Studio
+.vs/
+Debug/
+Release/
+
+# Ignorar carpetas de build de Visual Studio
+[Bb]in/
+[Oo]bj/
+
+# Ignorar archivos de configuración de usuario
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignorar configuraciones locales de Visual Studio
+.vscode/
+.vs/
+
+# Ignorar archivos generados por el sistema
+*.DS_Store
+*.idea
+.idea/
+
+# Ignorar archivos de log
+*.log
+
+# Ignorar archivos de paquetes de NuGet
+*.nupkg
+*.snupkg
+
+# Ignorar las carpetas de paquetes NuGet
+packages/

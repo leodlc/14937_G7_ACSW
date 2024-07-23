@@ -1,0 +1,137 @@
+﻿@model Data.PRESTAMO
+
+@using (Html.BeginForm("Create", "Loan", FormMethod.Post, new { id = "prestamoForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Prestamo</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.Label("Cliente", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select class="form-control" id="IDCLIENTE" name="IDCLIENTE" required>
+                    <option value="">Seleccione un cliente...</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Libro", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select class="form-control" id="IDLIBRO" name="IDLIBRO" required>
+                    <option value="">Seleccione un libro...</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="FECHAINIPREST">Fecha y hora de inicio</label>
+            <div class="col-md-10">
+                <input type="date" class="form-control" id="FECHAINIPREST" name="FECHAINIPREST" readonly />
+
+  
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="FECHAFINPREST">Fecha y hora de finalización</label>
+            <div class="col-md-10">
+                <input type="date" class="form-control" id="FECHAFINPREST" name="FECHAFINPREST" value="@Model.FECHAFINPREST?.ToString(" yyyy-MM-dd")" required />
+
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="DESCRPREST">Descripción</label>
+            <div class="col-md-10">
+                <textarea class="form-control" id="DESCRPREST" name="DESCRPREST" rows="3" maxlength="200">@Model.DESCRPREST</textarea>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="ESTADOPREST">Estado</label>
+            <div class="col-md-10">
+                <select class="form-control" id="ESTADOPREST" name="ESTADOPREST" required>
+                    <option value="">Seleccione un estado...</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Guardar" class="btn btn-success" />
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Agregar jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        function cargarClientesDisponibles() {
+            $.ajax({
+                url: '@Url.Action("GetClientesDisponibles", "Loan")',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var select = $('#IDCLIENTE');
+                    select.empty();
+                    select.append($('<option>').text('Seleccione un cliente...').attr('value', ''));
+                    $.each(data, function (index, cliente) {
+                        var optionText = cliente.NOMBRECLIENTE + " " + cliente.APELLIDOCLIENTE;
+                        select.append($('<option>').text(optionText).attr('value', cliente.IDCLIENTE));
+                    });
+                    select.val('@Model.IDCLIENTE');
+                },
+                error: function () {
+                    console.error("Error al cargar los clientes disponibles.");
+                }
+            });
+        }
+
+        function cargarLibrosDisponibles() {
+            $.ajax({
+                url: '@Url.Action("GetLibrosDisponibles", "Loan")',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var select = $('#IDLIBRO');
+                    select.empty();
+                    select.append($('<option>').text('Seleccione un libro...').attr('value', ''));
+                    $.each(data, function (index, libro) {
+                        select.append($('<option>').text(libro.NOMBRELIBRO).attr('value', libro.IDLIBRO));
+                    });
+                    select.val('@Model.IDLIBRO');
+                },
+                error: function () {
+                    console.error("Error al cargar los libros disponibles.");
+                }
+            });
+        }
+
+        function cargarEstadosDisponibles() {
+            var estados = [
+                { texto: 'Activo', valor: 'true' },
+                { texto: 'Finalizado', valor: 'false' }
+            ];
+            var select = $('#ESTADOPREST');
+            select.empty();
+            select.append($('<option>').text('Seleccione un estado...').attr('value', ''));
+            $.each(estados, function (index, estado) {
+                select.append($('<option>').text(estado.texto).attr('value', estado.valor));
+            });
+            select.val('@Model.ESTADOPREST ? "true" : "false"');
+        }
+
+        cargarClientesDisponibles();
+        cargarLibrosDisponibles();
+        cargarEstadosDisponibles();
+
+        var today = new Date().toISOString().split('T')[0];
+        $('#FECHAINIPREST').val(today);
+    });
+</script>

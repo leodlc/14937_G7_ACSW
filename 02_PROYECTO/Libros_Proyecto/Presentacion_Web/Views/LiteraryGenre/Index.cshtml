@@ -1,0 +1,163 @@
+﻿@model IEnumerable<Data.GENEROLITERARIO>
+
+@Html.Partial("_NavBar")
+
+@{
+    ViewBag.Title = "Lista de Géneros Literarios";
+}
+<div class="content-wrapper">
+
+    <div class="text-center mb-3">
+        <h2>Géneros Literarios Registrados</h2>
+        <button type="button" class="btn" data-toggle="modal" data-target="#createModal" style="background-color: #004400;color:white">Agregar Género Literario</button>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered text-center">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Id</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var genre in Model)
+                {
+                    <tr>
+                        <td>@genre.IDGL</td>
+                        <td>@genre.NOMBREGL</td>
+                        <td>@genre.DESCRIPGL</td>
+                        <td>
+                            <div>
+                                <button type="button" class="btn btn-outline-success btn-outline-success-custom" data-toggle="modal" data-target="#editModal" data-id="@genre.IDGL"><i class="fas fa-edit"></i></button>
+                                @*<button type="button" class="btn btn-outline-dark" data-toggle="modal" data-target="#deleteModal">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>*@
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal para Crear -->
+    <div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-labelledby="createModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="createModalLabel">Crear Género Literario</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @Html.Partial("_CrearGeneroForm", new Data.GENEROLITERARIO())
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Editar -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="editModalLabel">Editar Género Literario</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Aquí se cargará el formulario de edición -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agrega jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Agrega los scripts de Bootstrap -->
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    $('#editModal').on('show.bs.modal', function (event) {
+
+        var button = $(event.relatedTarget);
+        var id = button.data('id');
+
+        var modal = $(this);
+        $.ajax({
+            url: '@Url.Action("Edit", "LiteraryGenre")',
+            type: 'GET',
+            data: { id: id },
+            success: function (data) {
+                modal.find('.modal-body').html(data);
+                addValidationScripts(); // Asegura que las validaciones se agreguen después de que el formulario se haya cargado
+            }
+
+        });
+    });
+
+    $('#createModal').on('show.bs.modal', function (event) {
+        addValidationScripts(); // Agrega validaciones cuando se muestra el modal de creación
+    });
+
+    function addValidationScripts() {
+        // Uso de un selector más específico para evitar conflictos
+        $('#createModal #NOMBREGL, #editModal #NOMBREGL').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras (mayúsculas y minúsculas) y espacios (charCode 32)
+            if ((charCode >= 65 && charCode <= 90) || (charCode >= 97 && charCode <= 122) || charCode == 32) {
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        $('#createModal #DESCRIPGL, #editModal #DESCRIPGL').keypress(function (e) {
+            var charCode = e.which;
+            // Permite letras, números, espacios, comillas y comas
+            if ((charCode >= 65 && charCode <= 90) || // Letras mayúsculas
+                (charCode >= 97 && charCode <= 122) || // Letras minúsculas
+                (charCode >= 48 && charCode <= 57) || // Números
+                charCode == 32 || // Espacio
+                charCode == 34 || // Comillas dobles (")
+                charCode == 44) { // Coma (,)
+                return true;
+            } else {
+                return false;
+            }
+        });
+
+        $('#createModal #generoForm, #editModal #generoForm').submit(function (e) {
+            var formId = $(this).closest('.modal').attr('id');
+            var nombre = $('#' + formId + ' #NOMBREGL').val();
+            var descripcion = $('#' + formId + ' #DESCRIPGL').val();
+            var nombreError = $('#' + formId + ' #nombreError');
+            var descripcionError = $('#' + formId + ' #descripcionError');
+
+            // Validación del campo Nombre
+            var nombrePattern = /^[a-zA-Z\s]+$/;
+            if (!nombrePattern.test(nombre)) {
+                nombreError.text('El nombre solo puede contener letras y espacios.');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                nombreError.text('');
+            }
+
+            // Validación del campo Descripción
+            var descripcionPattern = /^[a-zA-Z0-9\s",]+$/;
+            if (!descripcionPattern.test(descripcion)) {
+                descripcionError.text('La descripción solo puede contener letras, números, espacios, comillas y comas.');
+                e.preventDefault(); // Evita el envío del formulario
+            } else {
+                descripcionError.text('');
+            }
+        });
+    }
+</script>

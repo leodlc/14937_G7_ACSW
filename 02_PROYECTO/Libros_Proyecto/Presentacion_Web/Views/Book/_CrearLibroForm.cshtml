@@ -1,0 +1,188 @@
+﻿@model Data.LIBRO
+
+@using (Html.BeginForm(Model.IDLIBRO == 0 ? "Create" : "Edit", "Book", FormMethod.Post, new { id = "libroForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Libro</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <input type="hidden" id="IDLIBRO" name="IDLIBRO" value="@Model.IDLIBRO" />
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="NOMBRELIBRO">Nombre</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" id="NOMBRELIBRO" name="NOMBRELIBRO" value="@Model.NOMBRELIBRO" required maxlength="100" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="ANIOPUBLIBRO">Año de Publicación</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" id="ANIOPUBLIBRO" name="ANIOPUBLIBRO" maxlength="4"
+                       value="@(Model.ANIOPUBLIBRO.HasValue ? Model.ANIOPUBLIBRO.Value.Year.ToString() : "")"
+                       data-val="true" data-val-required="El año de publicación es obligatorio" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="IMGLIBRO">Portada del Libro</label>
+            <div class="col-md-10">
+                <input type="file" class="form-control" id="IMGURL" name="IMGURL" />
+                <input type="hidden" id="IMGLIBRO" name="IMGLIBRO" value="@Model.IMGLIBRO" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="ISBNLIBRO">ISBN</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" id="ISBNLIBRO" name="ISBNLIBRO" value="@Model.ISBNLIBRO" required maxlength="13" />
+            </div>
+        </div>
+        <input type="hidden" id="ESTADOLIBRO" name="ESTADOLIBRO" value="true" />
+        <div class="form-group">
+            <label class="control-label col-md-2" for="EDITORIALLIBRO">Editorial</label>
+            <div class="col-md-10">
+                <input type="text" class="form-control" id="EDITORIALLIBRO" name="EDITORIALLIBRO" value="@Model.EDITORIALLIBRO" required maxlength="100" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="STOCKLIBRO">Stock</label>
+            <div class="col-md-10">
+                <input type="number" class="form-control" id="STOCKLIBRO" name="STOCKLIBRO" value="@Model.STOCKLIBRO" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-2" for="IDGENERO">Género Literario</label>
+            <div class="col-md-10">
+                <select class="form-control" id="IDGL" name="IDGL" required>
+                    <option value="">Seleccione un género...</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="IDAUTOR">Autor</label>
+            <div class="col-md-10">
+                <select class="form-control" id="IDAUTOR" name="IDAUTOR" required>
+                    <option value="">Seleccione un autor...</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="text-center">
+                    <input type="submit" value="Guardar" class="btn btn-success" />
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- Cargar primero las bibliotecas de jQuery y Firebase -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
+
+<script>
+    $(document).ready(function () {
+        const firebaseConfig = {
+            apiKey: "AIzaSyBPjhDmzTrW6b39CGyVGTyEP34C1DIJX8s",
+            authDomain: "books-e6740.firebaseapp.com",
+            projectId: "books-e6740",
+            storageBucket: "books-e6740.appspot.com",
+            messagingSenderId: "63023177263",
+            appId: "1:63023177263:web:fdd91b9be0cf7dfec4f0da",
+            measurementId: "G-MYF5M7MX45"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        function cargarAutoresDisponibles() {
+            $.ajax({
+                url: 'http://localhost:54845/api/Author/GetAll',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var select = $('#IDAUTOR');
+                    select.empty();
+                    select.append($('<option>').text('Seleccione un autor...').attr('value', ''));
+                    $.each(data, function (index, autor) {
+                        var optionText = autor.NOMBREAUTOR + " " + autor.APELLIDOAUTOR;
+                        var option = $('<option>').text(optionText).attr('value', autor.IDAUTOR);
+                        select.append(option);
+                    });
+                    // Selecciona el valor del autor en el modo editar
+                    $('#IDAUTOR').val('@Model.IDAUTOR');
+                },
+                error: function () {
+                    console.error("Error al cargar los autores disponibles.");
+                }
+            });
+        }
+
+        function cargarGenerosDisponibles() {
+            $.ajax({
+                url: 'http://localhost:54845/api/LiteraryGenre/GetAll',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    var select = $('#IDGL');
+                    select.empty();
+                    select.append($('<option>').text('Seleccione un género...').attr('value', ''));
+                    $.each(data, function (index, genero) {
+                        var option = $('<option>').text(genero.NOMBREGL).attr('value', genero.IDGL);
+                        select.append(option);
+                    });
+                    // Selecciona el valor del género en el modo editar
+                    $('#IDGL').val('@Model.IDGL');
+                },
+                error: function () {
+                    console.error("Error al cargar los géneros disponibles.");
+                }
+            });
+        }
+
+        cargarAutoresDisponibles();
+        cargarGenerosDisponibles();
+
+        $('#libroForm').on('submit', function (event) {
+            event.preventDefault();
+
+            var file = $('#IMGURL')[0].files[0];
+            if (file) {
+                var storageRef = firebase.storage().ref('portadas/' + file.name);
+                var uploadTask = storageRef.put(file);
+
+                uploadTask.on('state_changed', function (snapshot) {
+                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                }, function (error) {
+                    console.error("Error al subir la imagen:", error);
+                }, function () {
+                    uploadTask.snapshot.ref.getDownloadURL().then(function (downloadURL) {
+                        var img = "" + downloadURL;
+                        $('#IMGLIBRO').val(img);
+                        enviarFormulario();
+                    });
+                });
+            } else {
+                enviarFormulario();
+            }
+        });
+
+        function enviarFormulario() {
+            $('#libroForm').unbind('submit').submit();
+        }
+
+        $('#libroForm').on('submit', function (event) {
+            var year = $('#ANIOPUBLIBRO').val();
+            if (year.length === 4) {
+                var date = new Date(year);
+                var isoString = date.toISOString();
+                $('#ANIOPUBLIBRO').val(isoString);
+            } else {
+                event.preventDefault();
+                alert('Por favor, ingrese un año válido.');
+            }
+        });
+    });
+</script>
