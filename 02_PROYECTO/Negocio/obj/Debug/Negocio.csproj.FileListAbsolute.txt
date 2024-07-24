@@ -1,0 +1,12 @@
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\bin\Debug\Negocio.dll
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\bin\Debug\Negocio.pdb
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\bin\Debug\Data.dll
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\bin\Debug\EntityFramework.dll
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\bin\Debug\Data.pdb
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\bin\Debug\Data.dll.config
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\bin\Debug\EntityFramework.xml
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\obj\Debug\Negocio.csproj.AssemblyReference.cache
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\obj\Debug\Negocio.csproj.CoreCompileInputs.cache
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\obj\Debug\Negocio.csproj.CopyComplete
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\obj\Debug\Negocio.dll
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Negocio\obj\Debug\Negocio.pdb

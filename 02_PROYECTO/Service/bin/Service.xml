@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Service</name>
+    </assembly>
+    <members>
+        <member name="M:Service.SwaggerConfig.GetXmlCommentsPath">
+             <summary>
+            Obtenemos el path del archivo de documentación
+             </summary>
+             <returns></returns>
+        </member>
+        <member name="M:Service.Controllers.AuthorController.GetById(System.Int32)">
+            <summary>
+            Devuelve la busca del Autor por su Id
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

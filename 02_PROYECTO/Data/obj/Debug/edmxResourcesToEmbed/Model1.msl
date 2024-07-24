@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="booksDataBaseModelStoreContainer" CdmEntityContainer="booksDataBaseEntities">
+    <EntitySetMapping Name="AUTOR">
+      <EntityTypeMapping TypeName="booksDataBaseModel.AUTOR">
+        <MappingFragment StoreEntitySet="AUTOR">
+          <ScalarProperty Name="IDAUTOR" ColumnName="IDAUTOR" />
+          <ScalarProperty Name="NOMBREAUTOR" ColumnName="NOMBREAUTOR" />
+          <ScalarProperty Name="APELLIDOAUTOR" ColumnName="APELLIDOAUTOR" />
+          <ScalarProperty Name="NACIONALIDADAUTOR" ColumnName="NACIONALIDADAUTOR" />
+          <ScalarProperty Name="BIOGRAFIAAUTOR" ColumnName="BIOGRAFIAAUTOR" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CLIENTE">
+      <EntityTypeMapping TypeName="booksDataBaseModel.CLIENTE">
+        <MappingFragment StoreEntitySet="CLIENTE">
+          <ScalarProperty Name="IDCLIENTE" ColumnName="IDCLIENTE" />
+          <ScalarProperty Name="CEDULACLIENTE" ColumnName="CEDULACLIENTE" />
+          <ScalarProperty Name="NOMBRECLIENTE" ColumnName="NOMBRECLIENTE" />
+          <ScalarProperty Name="APELLIDOCLIENTE" ColumnName="APELLIDOCLIENTE" />
+          <ScalarProperty Name="TELEFONOCLIENTE" ColumnName="TELEFONOCLIENTE" />
+          <ScalarProperty Name="DIRECCLIENTE" ColumnName="DIRECCLIENTE" />
+          <ScalarProperty Name="FECHANACCLIENTE" ColumnName="FECHANACCLIENTE" />
+          <ScalarProperty Name="ESTADOCLIENTE" ColumnName="ESTADOCLIENTE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GENEROLITERARIO">
+      <EntityTypeMapping TypeName="booksDataBaseModel.GENEROLITERARIO">
+        <MappingFragment StoreEntitySet="GENEROLITERARIO">
+          <ScalarProperty Name="IDGL" ColumnName="IDGL" />
+          <ScalarProperty Name="NOMBREGL" ColumnName="NOMBREGL" />
+          <ScalarProperty Name="DESCRIPGL" ColumnName="DESCRIPGL" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="LIBRO">
+      <EntityTypeMapping TypeName="booksDataBaseModel.LIBRO">
+        <MappingFragment StoreEntitySet="LIBRO">
+          <ScalarProperty Name="IDLIBRO" ColumnName="IDLIBRO" />
+          <ScalarProperty Name="IDAUTOR" ColumnName="IDAUTOR" />
+          <ScalarProperty Name="IDGL" ColumnName="IDGL" />
+          <ScalarProperty Name="NOMBRELIBRO" ColumnName="NOMBRELIBRO" />
+          <ScalarProperty Name="ANIOPUBLIBRO" ColumnName="ANIOPUBLIBRO" />
+          <ScalarProperty Name="IMGLIBRO" ColumnName="IMGLIBRO" />
+          <ScalarProperty Name="ISBNLIBRO" ColumnName="ISBNLIBRO" />
+          <ScalarProperty Name="ESTADOLIBRO" ColumnName="ESTADOLIBRO" />
+          <ScalarProperty Name="EDITORIALLIBRO" ColumnName="EDITORIALLIBRO" />
+          <ScalarProperty Name="STOCKLIBRO" ColumnName="STOCKLIBRO" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PRESTAMO">
+      <EntityTypeMapping TypeName="booksDataBaseModel.PRESTAMO">
+        <MappingFragment StoreEntitySet="PRESTAMO">
+          <ScalarProperty Name="IDCLIENTE" ColumnName="IDCLIENTE" />
+          <ScalarProperty Name="IDLIBRO" ColumnName="IDLIBRO" />
+          <ScalarProperty Name="FECHAINIPREST" ColumnName="FECHAINIPREST" />
+          <ScalarProperty Name="FECHAFINPREST" ColumnName="FECHAFINPREST" />
+          <ScalarProperty Name="DESCRPREST" ColumnName="DESCRPREST" />
+          <ScalarProperty Name="ESTADOPREST" ColumnName="ESTADOPREST" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

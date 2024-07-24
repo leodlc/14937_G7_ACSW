@@ -1,0 +1,12 @@
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\bin\Debug\Data.dll.config
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\bin\Debug\Data.dll
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\bin\Debug\Data.pdb
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\bin\Debug\EntityFramework.dll
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\bin\Debug\EntityFramework.SqlServer.dll
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\bin\Debug\EntityFramework.xml
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\bin\Debug\EntityFramework.SqlServer.xml
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\obj\Debug\Data.csproj.AssemblyReference.cache
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\obj\Debug\Data.csproj.CoreCompileInputs.cache
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\obj\Debug\Data.csproj.CopyComplete
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\obj\Debug\Data.dll
+D:\Grupo-distribuidas\apps\Libros_Proyecto\Data\obj\Debug\Data.pdb
