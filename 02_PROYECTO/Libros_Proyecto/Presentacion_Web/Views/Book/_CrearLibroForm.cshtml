@@ -1,4 +1,4 @@
-﻿@model Data.LIBRO
+﻿﻿@model Data.LIBRO
 
 @using (Html.BeginForm(Model.IDLIBRO == 0 ? "Create" : "Edit", "Book", FormMethod.Post, new { id = "libroForm", enctype = "multipart/form-data" }))
 {
@@ -55,6 +55,7 @@
             <div class="col-md-10">
                 <select class="form-control" id="IDGL" name="IDGL" required>
                     <option value="">Seleccione un género...</option>
+                    <!-- Opciones de géneros se cargarán dinámicamente -->
                 </select>
             </div>
         </div>
@@ -64,6 +65,7 @@
             <div class="col-md-10">
                 <select class="form-control" id="IDAUTOR" name="IDAUTOR" required>
                     <option value="">Seleccione un autor...</option>
+                    <!-- Opciones de autores se cargarán dinámicamente -->
                 </select>
             </div>
         </div>
@@ -77,41 +79,38 @@
     </div>
 }
 
-<!-- Cargar primero las bibliotecas de jQuery y Firebase -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-storage.js"></script>
 
 <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBPjhDmzTrW6b39CGyVGTyEP34C1DIJX8s",
+        authDomain: "books-e6740.firebaseapp.com",
+        projectId: "books-e6740",
+        storageBucket: "books-e6740.appspot.com",
+        messagingSenderId: "63023177263",
+        appId: "1:63023177263:web:fdd91b9be0cf7dfec4f0da",
+        measurementId: "G-MYF5M7MX45"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
     $(document).ready(function () {
-        const firebaseConfig = {
-            apiKey: "AIzaSyBPjhDmzTrW6b39CGyVGTyEP34C1DIJX8s",
-            authDomain: "books-e6740.firebaseapp.com",
-            projectId: "books-e6740",
-            storageBucket: "books-e6740.appspot.com",
-            messagingSenderId: "63023177263",
-            appId: "1:63023177263:web:fdd91b9be0cf7dfec4f0da",
-            measurementId: "G-MYF5M7MX45"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-
         function cargarAutoresDisponibles() {
             $.ajax({
-                url: 'http://localhost:54845/api/Author/GetAll',
+                url: 'http://localhost:54845/api/Author/GetAll', // Cambia esta URL según sea necesario
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
                     var select = $('#IDAUTOR');
                     select.empty();
+                    console.log(data);
                     select.append($('<option>').text('Seleccione un autor...').attr('value', ''));
                     $.each(data, function (index, autor) {
                         var optionText = autor.NOMBREAUTOR + " " + autor.APELLIDOAUTOR;
-                        var option = $('<option>').text(optionText).attr('value', autor.IDAUTOR);
-                        select.append(option);
+                        select.append($('<option>').text(optionText).attr('value', autor.IDAUTOR));
                     });
-                    // Selecciona el valor del autor en el modo editar
-                    $('#IDAUTOR').val('@Model.IDAUTOR');
                 },
                 error: function () {
                     console.error("Error al cargar los autores disponibles.");
@@ -119,21 +118,20 @@
             });
         }
 
+        // Función para cargar los géneros disponibles desde una URL
         function cargarGenerosDisponibles() {
             $.ajax({
-                url: 'http://localhost:54845/api/LiteraryGenre/GetAll',
+                url: 'http://localhost:54845/api/LiteraryGenre/GetAll', // Cambia esta URL según sea necesario
                 type: 'GET',
                 dataType: 'json',
                 success: function (data) {
                     var select = $('#IDGL');
                     select.empty();
+                    console.log(data);
                     select.append($('<option>').text('Seleccione un género...').attr('value', ''));
                     $.each(data, function (index, genero) {
-                        var option = $('<option>').text(genero.NOMBREGL).attr('value', genero.IDGL);
-                        select.append(option);
+                        select.append($('<option>').text(genero.NOMBREGL).attr('value', genero.IDGL));
                     });
-                    // Selecciona el valor del género en el modo editar
-                    $('#IDGL').val('@Model.IDGL');
                 },
                 error: function () {
                     console.error("Error al cargar los géneros disponibles.");
@@ -169,20 +167,23 @@
             }
         });
 
-        function enviarFormulario() {
-            $('#libroForm').unbind('submit').submit();
-        }
+    });
 
-        $('#libroForm').on('submit', function (event) {
-            var year = $('#ANIOPUBLIBRO').val();
-            if (year.length === 4) {
-                var date = new Date(year);
-                var isoString = date.toISOString();
-                $('#ANIOPUBLIBRO').val(isoString);
-            } else {
-                event.preventDefault();
-                alert('Por favor, ingrese un año válido.');
-            }
-        });
+    function enviarFormulario() {
+        $('#libroForm').unbind('submit').submit();
+    }
+
+
+
+    $('#libroForm').on('submit', function (event) {
+        var year = $('#ANIOPUBLIBRO').val();
+        if (year.length === 4) {
+            var date = new Date(year);
+            var isoString = date.toISOString();
+            $('#ANIOPUBLIBRO').val(isoString);
+        } else {
+            event.preventDefault();
+            alert('Por favor, ingrese un año válido.');
+        }
     });
 </script>
