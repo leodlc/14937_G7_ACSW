@@ -1,10 +1,7 @@
 package ec.edu.espe.bookstore;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.PageSize;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.*;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
@@ -16,7 +13,7 @@ import java.io.FileOutputStream;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 
-public class BasicStepDefinition {
+public abstract class BasicStepDefinition {
     private ChromeOptions options;
     protected WebDriver driver;
     protected Document document;
@@ -25,10 +22,15 @@ public class BasicStepDefinition {
     public BasicStepDefinition() {
         options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
+        //options.addArguments("--headless=new");
         System.setProperty("webdriver.http.factory", "jdk-http-client");
         System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+ "/src/test/resources/drivers/chromedriver.exe");
-        this.driver = new ChromeDriver();
+        this.driver = new ChromeDriver(options);
     }
+
+    abstract protected String getFeatureName();
+    abstract protected String getDescription();
+    abstract protected String getJiraIssueId();
 
     protected void createPDF(String stepName) {
         try {
@@ -46,6 +48,22 @@ public class BasicStepDefinition {
             pdfWriter = PdfWriter.getInstance(document, fos);
             pdfWriter.open();
             document.open();
+
+            addText("Nombre: " + getFeatureName());
+            addText("Descripción: " + getDescription());
+            addText("Requisito: " + getJiraIssueId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    protected void addPassOrFailMark(boolean passOrFail) {
+        try {
+            wait(1);
+            Image image = Image.getInstance(passOrFail ? "./pass.png" : "./fail.png");
+            addText(" ");
+            addText(" ");
+            document.add(image);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -77,6 +95,7 @@ public class BasicStepDefinition {
     protected void addText(String text) {
         try {
             document.add(new Paragraph(text));
+            document.add(new Paragraph(" "));
         } catch (Exception e) {
             e.printStackTrace();
         }

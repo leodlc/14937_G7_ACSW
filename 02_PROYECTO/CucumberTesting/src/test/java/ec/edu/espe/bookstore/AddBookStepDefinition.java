@@ -20,7 +20,22 @@ public class AddBookStepDefinition extends BasicStepDefinition {
 
         driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
         driver.manage().window().maximize();
-        driver.get("http://localhost:5275/Home/AddBook");
+        driver.get("http://200.105.253.153:5275/Home/AddBook");
+    }
+
+    @Override
+    protected String getFeatureName() {
+        return "Agregar un Libro";
+    }
+
+    @Override
+    protected String getDescription() {
+        return "Quiero verificar que un libro pueda ser agregado correctamente";
+    }
+
+    @Override
+    protected String getJiraIssueId() {
+        return "SCRUM-1";
     }
 
     @When("Relleno los campos, nombre: {string}, isbn: {string}, editorial: {string}, precio: {string}, autor: {string}, año: {string}, genero: {string}")
@@ -77,8 +92,10 @@ public class AddBookStepDefinition extends BasicStepDefinition {
 
             if (bookFound) {
                 addText("Prueba correcta: El libro " + name + " fue agregado correctamente");
+                addPassOrFailMark(true);
             } else {
                 addText("Prueba fallida: El libro " + name + " no fue agregado correctamente");
+                addPassOrFailMark(false);
             }
 
             book.findElement(new By.ByCssSelector(".actions ul li:last-child a")).click();
@@ -87,6 +104,7 @@ public class AddBookStepDefinition extends BasicStepDefinition {
             closePDF();
         } catch (Exception ex) {
             addText("Prueba fallida: El libro " + name + " no fue agregado correctamente");
+            addPassOrFailMark(false);
             wait(1);
             this.driver.quit();
             closePDF();
