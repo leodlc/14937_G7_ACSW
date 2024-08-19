@@ -35,7 +35,7 @@ public class EditBookStepDefinition extends BasicStepDefinition {
         createPDF("EditarLibro");
         addText("Inicio de prueba: Editar un libro");
 
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         driver.manage().window().maximize();
         driver.get("http://200.105.253.153:5275/Home/AddBook");
     }
@@ -84,6 +84,8 @@ public class EditBookStepDefinition extends BasicStepDefinition {
 
     @When("Edito el nombre del libro {string} con el nuevo nombre {string}")
     public void edito_el_nombre_del_libro_con_el_nuevo_nombre(String oldName, String newName) {
+        this.oldName = oldName;
+        this.newName = newName;
         addText("Edito el nombre del libro: " + oldName + " con el nuevo nombre: " + newName);
 
         WebElement container = driver.findElement(By.cssSelector(".container .row .col"));
@@ -135,6 +137,7 @@ public class EditBookStepDefinition extends BasicStepDefinition {
             addPassOrFailMark(false);
             closePDF();
             wait(1);
+            e.printStackTrace();
             fail("El libro no se editó correctamente");
         }
     }

@@ -31,7 +31,7 @@ public class AddAutorStepDefinition extends BasicStepDefinition {
         createPDF("AgregarAutor");
         addText("Inicio de prueba: Quiero agregar un nuevo autor");
 
-        driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+        driver.manage().timeouts().implicitlyWait(3, TimeUnit.SECONDS);
         driver.manage().window().maximize();
         driver.get("http://200.105.253.153:5275/Authors/AddAuthor");
     }

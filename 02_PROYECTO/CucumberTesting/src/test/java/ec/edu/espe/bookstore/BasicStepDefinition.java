@@ -22,7 +22,7 @@ public abstract class BasicStepDefinition {
     public BasicStepDefinition() {
         options = new ChromeOptions();
         options.addArguments("--remote-allow-origins=*");
-        //options.addArguments("--headless=new");
+        options.addArguments("--headless=new");
         System.setProperty("webdriver.http.factory", "jdk-http-client");
         System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+ "/src/test/resources/drivers/chromedriver.exe");
         this.driver = new ChromeDriver(options);

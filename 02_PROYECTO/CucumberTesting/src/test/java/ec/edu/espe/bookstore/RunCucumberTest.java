@@ -10,6 +10,4 @@ import org.junit.runner.RunWith;
     glue = {"ec.edu.espe.bookstore"},
     plugin = {"pretty", "html:target/cucumber-html-report", "json:cucumber.json"}
 )
-public class RunCucumberTest {
-
-}
+public class RunCucumberTest {}
